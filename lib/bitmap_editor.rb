@@ -1,4 +1,10 @@
+require_relative '../lib/parser'
+require_relative '../lib/bitmap'
+
 class BitmapEditor
+  def initialize
+    @commands = []
+  end
 
   def run(file)
     return puts "please provide correct file" if file.nil? || !File.exists?(file)
@@ -7,10 +13,12 @@ class BitmapEditor
       line = line.chomp
       case line
       when 'S'
-        puts "There is no image"
+        Parser.process_input @commands
+        break
       else
-        puts 'unrecognised command :('
+        @commands << Parser.parse(line)
       end
     end
+    @commands
   end
 end
