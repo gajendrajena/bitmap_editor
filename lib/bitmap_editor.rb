@@ -13,6 +13,10 @@ class BitmapEditor
       line = line.chomp
       case line
       when 'S'
+        if @commands.empty?
+          puts "ERR: No bitmap commands"
+          return
+        end
         Parser.process_input @commands
         break
       else

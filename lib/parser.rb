@@ -1,10 +1,10 @@
 class Parser
   PARSE_EXP = {
     new: /I (\d+) (\d+)/,
-    dot: /L (\d+) (\d+) ([A-Z])/,
-    fill: /F (\d+) (\d+) ([A-Z])/,
+    colour: /L (\d+) (\d+) ([A-Z])/,
     hline: /H (\d+) (\d+) (\d+) ([A-Z])/,
     vline: /V (\d+) (\d+) (\d+) ([A-Z])/,
+    clear: /C/,
     show: /S/
   }
 
@@ -20,10 +20,21 @@ class Parser
       when :new
         @bitmap = Bitmap.new(*params)
       else
-        @bitmap.send(command, *params) if @bitmap
+        unless @bitmap
+          puts "ERR: No bitmap has been created"
+          break
+        end
+
+        @bitmap.send(command, *params)
       end
     end
+
+    @bitmap.data.each do|arr|
+      arr.each do|ar|
+        print ar
+      end
+      puts "\n"
+    end unless @bitmap.nil? && @bitmap.data.empty?
+    @bitmap.data
   end
-
-
 end

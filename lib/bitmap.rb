@@ -1,45 +1,62 @@
 class Bitmap
   attr_reader :width, :height, :data
 
+  # Creates a new empty bitmap with white colour (O)
   def initialize(width, height)
-    # Creates a new empty bitmap with white colour (O)
     @width = width.to_i
     @height = height.to_i
-    @data = Array.new(@width * @height, 'O')
+    @data = Array.new(@height) { Array.new(@width, '0')}
   end
 
   def bounds?(x, y)
-    x <= @width && y <= @height
+    (x >= 0 && x <= @width) && (y >= 0 && y <= @height)
   end
 
-  def [](x, y)
-    @data[(y-1)*@width+(x-1)]
+  def clear()
+    @data = Array.new(@height) { Array.new(@width, '0')}
   end
+
+  # fill colour to a pixel (x, y) with c
+  def colour(x, y, c)
+    x, y = x.to_i, y.to_i
+
+    unless self.bounds?(x, y)
+      puts "ERR: Coordinates out of bounds"
+      return
+    end
+
+    self[y, x] = c
+  end
+
+  # draw a horizontal line with colour c from pixel(x1, y) to a pixel (x2, y)
+  def hline(x1, x2, y, c)
+    x1, x2, y = x1.to_i, x2.to_i, y.to_i
+
+    unless self.bounds?(x1, y) && self.bounds?(x2, y)
+      puts "ERR: Coordinates out of bounds"
+      return
+    end
+
+    (x1..x2).each {|x| self[y, x] = c}
+  end
+
+  # draw a horizontal line with colour c from pixel(x1, y) to a pixel (x2, y)
+  def vline(x, y1, y2, c)
+    x, y1, y2 = x.to_i, y1.to_i, y2.to_i
+
+    unless self.bounds?(x, y1) && self.bounds?(x, y2)
+      puts "ERR: Coordinates out of bounds"
+      return
+    end
+
+    (y1..y2).each {|y| self[y, x] = c}
+  end
+
+  private
 
   def []=(x, y, val)
-    @data[(y-1)*@width+(x-1)] = val
+    @data[x-1][y-1] = val
   end
-
-  def rows
-    @data.each_slice(@width)
-  end
-
-  def dot(x, y, c)
-    puts "dot : #{x}, #{y}, #{c}"
-  end
-
-  def fill()
-    puts "fill "
-  end
-
-  def hline(x1, x2, y, c)
-    puts "hline : #{x1}, #{x2}, #{y}, #{c}"
-  end
-
-  def vline(x, y1, y2, c)
-    puts "vline : #{x}, #{y1}, #{y2}, #{c}"
-  end
-
 
 end
 
